@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import CodepenEdit from './CodepenEdit'
+import CodepenEdit from './CodepenEdit.vue'
 
 export default {
     components: {

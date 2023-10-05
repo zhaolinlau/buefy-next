@@ -1,9 +1,9 @@
 import { createApp } from 'vue'
-import App from './App'
+import App from './App.vue'
 import { createDocsRouter } from './router'
 import Emitter from 'tiny-emitter'
 
-import Buefy from '../src'
+import Buefy from '../../src'
 import Axios from 'axios'
 // TODO: use vue3-progressbar?
 // import VueProgressBar from 'vue-progressbar'
@@ -11,12 +11,12 @@ import Axios from 'axios'
 // import VueAnalytics from 'vue-analytics'
 import Bluebird from 'bluebird'
 import hljs from 'highlight.js'
-import { createNewEvent } from '../src/utils/helpers'
+import { createNewEvent } from '../../src/utils/helpers'
 
-import ApiView from './components/ApiView'
-import CodeView from './components/CodeView'
-import VariablesView from './components/VariablesView'
-import Example from './components/Example'
+import ApiView from './components/ApiView.vue'
+import CodeView from './components/CodeView.vue'
+import VariablesView from './components/VariablesView.vue'
+import Example from './components/Example.vue'
 
 // global Vue instance should be replaced with `vueApp`
 const vueApp = createApp({

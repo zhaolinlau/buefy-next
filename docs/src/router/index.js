@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-import { afterEachGlobal } from './guards'
+import { afterEachGlobal } from './guards.js'
 import routes from '@/data/routes'
 
 export function createDocsRouter(vueApp) {
@@ -9,7 +8,7 @@ export function createDocsRouter(vueApp) {
             path,
             name: path,
             meta: routes[path],
-            component: () => import(`@/pages/${component}`)
+            component: () => import(`@/pages/${component}`/* @vite-ignore */)
         }
     }
 
