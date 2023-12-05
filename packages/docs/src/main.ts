@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import { createDocsRouter } from './router'
-import Emitter from 'tiny-emitter'
+import { TinyEmitter } from 'tiny-emitter' // https://github.com/scottcorgan/tiny-emitter/issues/47#issuecomment-1551817340
 
 import Buefy, { createNewEvent } from '@ntohq/buefy-next'
 import Axios from 'axios'
@@ -36,7 +36,7 @@ vueApp.config.productionTip = false
 window.global ||= window
 
 vueApp.config.globalProperties.$http = Axios
-vueApp.config.globalProperties.$eventHub = new Emitter()
+vueApp.config.globalProperties.$eventHub = new TinyEmitter()
 
 vueApp.use(Buefy, {
     // defaultModalScroll: 'keep'
