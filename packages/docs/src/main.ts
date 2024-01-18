@@ -9,6 +9,7 @@ import Axios from 'axios'
 // import VueProgressBar from 'vue-progressbar'
 // TODO: use vue-gtag-next?
 // import VueAnalytics from 'vue-analytics'
+// @ts-expect-error Remove bluebird. https://github.com/ntohq/buefy-next/issues/171
 import Bluebird from 'bluebird'
 import hljs from 'highlight.js'
 
@@ -30,11 +31,11 @@ const router = createDocsRouter(vueApp)
 
 vueApp.use(router)
 
-vueApp.config.productionTip = false
-
 // Webpack inserts `global` but Vite does not
 // https://stackoverflow.com/a/73208485
+// @ts-expect-error Remove bluebird. https://github.com/ntohq/buefy-next/issues/171
 window.global ||= window
+// @ts-expect-error Remove bluebird. https://github.com/ntohq/buefy-next/issues/171
 global.Promise = Bluebird
 
 vueApp.config.globalProperties.$http = Axios
