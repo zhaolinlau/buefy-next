@@ -19,10 +19,16 @@ export function preformat(text?: string): string | undefined {
     return newText.join('\r\n')
 }
 
-export function shallowFields(fields) {
+// Wraps all the fields of a given object with `shallowRef`.
+//
+// This is useful when you want to wrap Example components with `shallowRef`.
+export function shallowFields<T >(
+    fields: { [K in keyof T]: T[K] }
+): { [K in keyof T]: ShallowRef<T[K]> } {
+    // eslint-disable-next-line no-use-before-define
+    const shallow = {} as { [K in keyof T]: ShallowRef<T[K]> }
     for (const key in fields) {
-        fields[key] = shallowRef(fields[key])
+        shallow[key] = shallowRef(fields[key])
     }
-
-    return fields
+    return shallow
 }

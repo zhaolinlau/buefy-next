@@ -27,12 +27,12 @@
 
 <script lang="ts">
     import { defineComponent } from 'vue'
+    import { shallowFields } from '@/utils'
 
     import api from './api/tag'
 
     import ExSimple from './examples/ExSimple.vue'
     import ExSimpleCode from './examples/ExSimple.vue?raw'
-    import { shallowFields } from '@/utils'
 
     import ExIcon from './examples/ExIcon.vue'
     import ExIconCode from './examples/ExIcon.vue?raw'
