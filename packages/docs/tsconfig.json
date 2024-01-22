@@ -4,6 +4,9 @@
   "exclude": ["node_modules", "src/assets/*"],
   "compilerOptions": {
     "allowJs": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   }
 }
