@@ -1,3 +1,5 @@
+import { shallowRef, type ShallowRef } from 'vue'
+
 export function preformat(text?: string): string | undefined {
     if (!text) return
 
@@ -14,4 +16,18 @@ export function preformat(text?: string): string | undefined {
         newText.push(line.replace(whitespaces, ''))
     })
     return newText.join('\r\n')
+}
+
+// Wraps all the fields of a given object with `shallowRef`.
+//
+// This is useful when you want to wrap Example components with `shallowRef`.
+export function shallowFields<T >(
+    fields: { [K in keyof T]: T[K] }
+): { [K in keyof T]: ShallowRef<T[K]> } {
+    // eslint-disable-next-line no-use-before-define
+    const shallow = {} as { [K in keyof T]: ShallowRef<T[K]> }
+    for (const key in fields) {
+        shallow[key] = shallowRef(fields[key])
+    }
+    return shallow
 }

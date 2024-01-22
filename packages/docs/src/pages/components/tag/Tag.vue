@@ -27,6 +27,7 @@
 
 <script lang="ts">
     import { defineComponent } from 'vue'
+    import { shallowFields } from '@/utils'
 
     import api from './api/tag'
 
@@ -55,13 +56,15 @@
         data() {
             return {
                 api,
-                ExSimple,
-                ExIcon,
-                ExClosable,
-                ExTaglist,
-                ExTaglistAttached,
-                ExFieldCombine,
-                ExSizes,
+                ...shallowFields({
+                    ExSimple,
+                    ExIcon,
+                    ExClosable,
+                    ExTaglist,
+                    ExTaglistAttached,
+                    ExFieldCombine,
+                    ExSizes
+                }),
                 ExSimpleCode,
                 ExIconCode,
                 ExClosableCode,
