@@ -4,13 +4,17 @@ import './utils/vue-augmentation'
 import allComponents from './components'
 
 import { merge } from './utils/helpers'
-import config, { setOptions, setVueInstance } from './utils/config'
+import config, {
+    setOptions,
+    setVueInstance,
+    type BuefyConfigOptions
+} from './utils/config'
 import { registerComponentProgrammatic } from './utils/plugins'
 
 import ConfigComponent from './utils/ConfigComponent'
 
 const Buefy = {
-    install(Vue: App, options = {}) {
+    install(Vue: App, options: BuefyConfigOptions = {}) {
         setVueInstance(Vue)
         // Options
         setOptions(merge(config, options, true))
@@ -38,3 +42,5 @@ export { default as ConfigProgrammatic } from './utils/ConfigComponent'
 export { default as Color } from './utils/color'
 // export helpers
 export * from './utils/helpers'
+// exports types in config
+export type * from './utils/config'
