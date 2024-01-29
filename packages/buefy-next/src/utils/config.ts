@@ -37,6 +37,21 @@ export type ModalScrollOption = 'clip' | 'keep'
 export type FieldLabelPosition = 'inside' | 'on-border'
 
 /**
+ * Icon pack.
+ *
+ * @public
+ */
+export interface IconPack {
+    /**
+     * Available sizes.
+     * Maps size names to size values.
+     */
+    sizes: Record<string, string | null>,
+    /** Icon prefix. */
+    iconPrefix: string,
+}
+
+/**
  * Buefy configuration.
  *
  * @public
@@ -440,9 +455,7 @@ export interface BuefyConfig {
      * Custom icon packs.
      * No custom icon packs by default.
      */
-    // TODO: refine while rewriting icons.js
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    customIconPacks?: Record<string, any> | null
+    customIconPacks?: Record<string, IconPack> | null
 }
 
 let config: BuefyConfig = {
