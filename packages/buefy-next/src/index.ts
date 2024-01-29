@@ -1,5 +1,6 @@
 import type { App } from 'vue'
 
+import './utils/vue-augmentation'
 import allComponents from './components'
 
 import { merge } from './utils/helpers'
