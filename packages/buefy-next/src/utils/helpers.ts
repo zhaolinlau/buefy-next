@@ -28,7 +28,7 @@ export const sign = Math.sign || signPoly
  *
  * @internal
  */
-function hasFlag(val: number, flag: number): boolean {
+export function hasFlag(val: number, flag: number): boolean {
     return (val & flag) === flag
 }
 
@@ -40,7 +40,7 @@ function hasFlag(val: number, flag: number): boolean {
  *
  * @internal
  */
-function mod(n: number, mod: number): number {
+export function mod(n: number, mod: number): number {
     return ((n % mod) + mod) % mod
 }
 
@@ -53,16 +53,12 @@ function mod(n: number, mod: number): number {
  *
  * @internal
  */
-function bound(val: number, min: number, max: number): number {
+export function bound(val: number, min: number, max: number): number {
     return Math.max(min, Math.min(max, val))
 }
 
-export { mod, bound, hasFlag }
-
 /**
  * Get value of an object property/path even if it's nested
- *
- * @internal
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getValueByPath(obj: any, path: string): any {
