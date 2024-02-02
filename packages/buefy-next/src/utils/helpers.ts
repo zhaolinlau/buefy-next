@@ -1,9 +1,20 @@
 import { Comment, Fragment, Static, Text } from 'vue'
+import type { App, ComponentPublicInstance, VNode } from 'vue'
+
+// augments Vue App to deal with plugins
+declare module '@vue/runtime-core' {
+    interface App {
+        // introduced by vue-i18n
+        __VUE_I18N_SYMBOL__?: symbol
+    }
+}
 
 /**
  * +/- function to native math sign
+ *
+ * @internal
  */
-function signPoly(value) {
+function signPoly(value: number): number {
     if (value < 0) return -1
     return value > 0 ? 1 : 0
 }
@@ -14,8 +25,10 @@ export const sign = Math.sign || signPoly
  * @param val
  * @param flag
  * @returns {boolean}
+ *
+ * @internal
  */
-function hasFlag(val, flag) {
+function hasFlag(val: number, flag: number): boolean {
     return (val & flag) === flag
 }
 
@@ -24,8 +37,10 @@ function hasFlag(val, flag) {
  * @param n
  * @param mod
  * @returns {number}
+ *
+ * @internal
  */
-function mod(n, mod) {
+function mod(n: number, mod: number): number {
     return ((n % mod) + mod) % mod
 }
 
@@ -35,8 +50,10 @@ function mod(n, mod) {
  * @param min
  * @param max
  * @returns {number}
+ *
+ * @internal
  */
-function bound(val, min, max) {
+function bound(val: number, min: number, max: number): number {
     return Math.max(min, Math.min(max, val))
 }
 
@@ -44,15 +61,24 @@ export { mod, bound, hasFlag }
 
 /**
  * Get value of an object property/path even if it's nested
+ *
+ * @internal
  */
-export function getValueByPath(obj, path) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getValueByPath(obj: any, path: string): any {
     return path.split('.').reduce((o, i) => o ? o[i] : null, obj)
 }
 
 /**
  * Extension of indexOf method by equality function if specified
+ *
+ * @internal
  */
-export function indexOf(array, obj, fn) {
+export function indexOf<T>(
+    array: T[] | null | undefined,
+    obj: T,
+    fn?: (a: T, b: T) => boolean
+): number {
     if (!array) return -1
 
     if (!fn || typeof fn !== 'function') return array.indexOf(obj)
@@ -66,24 +92,41 @@ export function indexOf(array, obj, fn) {
     return -1
 }
 
+// Deep partial type.
+//
+// There are some edge cases where this type is not sufficient in general,
+// but it works for this library.
+// https://stackoverflow.com/questions/61132262/typescript-deep-partial
+type DeepPartial<T> = { [K in keyof T]?: DeepPartial<T[K]> }
+
 /**
  * Merge function to replace Object.assign with deep merging possibility
+ *
+ * @internal
  */
-const isObject = (item) => typeof item === 'object' && !Array.isArray(item)
-const mergeFn = (target, source, deep = false) => {
+const isObject = (item: unknown) => typeof item === 'object' && !Array.isArray(item)
+const mergeFn = <T>(
+    target: { [K in keyof T]: T[K] },
+    source: DeepPartial<T>,
+    deep = false
+): { [K in keyof T]: T[K] } => {
     if (deep || !Object.assign) {
-        const isDeep = (prop) =>
+        const isDeep = (prop: keyof T) =>
             isObject(source[prop]) &&
             target !== null &&
             Object.prototype.hasOwnProperty.call(target, prop) &&
             isObject(target[prop])
-        const replaced = Object.getOwnPropertyNames(source)
+        const replaced = (Object.getOwnPropertyNames(source) as (keyof T)[])
             .map((prop) => ({
                 [prop]: isDeep(prop)
-                    ? mergeFn(target[prop], source[prop], deep)
+                    ? mergeFn<T[keyof T]>(target[prop], source[prop] || {}, deep)
                     : source[prop]
             }))
-            .reduce((a, b) => ({ ...a, ...b }), {})
+            .reduce(
+                (a, b) => ({ ...a, ...b }),
+                // eslint-disable-next-line no-use-before-define
+                {}
+            )
 
         return {
             ...target,
@@ -98,6 +141,8 @@ export const merge = mergeFn
 /**
  * Mobile detection
  * https://www.abeautifulsite.net/detecting-mobile-devices-with-javascript
+ *
+ * @internal
  */
 export const isMobile = {
     Android: function () {
@@ -141,9 +186,9 @@ export const isMobile = {
             isMobile.Windows()
         )
     }
-}
+} as const
 
-export function removeElement(el) {
+export function removeElement(el: Element) {
     if (typeof el.remove !== 'undefined') {
         el.remove()
     } else if (typeof el.parentNode !== 'undefined' && el.parentNode !== null) {
@@ -151,7 +196,7 @@ export function removeElement(el) {
     }
 }
 
-export function createAbsoluteElement(el) {
+export function createAbsoluteElement(el: Element): Element {
     const root = document.createElement('div')
     root.style.position = 'absolute'
     root.style.left = '0px'
@@ -164,15 +209,19 @@ export function createAbsoluteElement(el) {
     return root
 }
 
-export function isVueComponent(c) {
-    return c && c.$ != null && c.$.vnode != null
+export function isVueComponent(c: unknown) {
+    return c != null &&
+        (c as ComponentPublicInstance).$ != null &&
+        (c as ComponentPublicInstance).$.vnode != null
 }
 
 /**
  * Escape regex characters
  * http://stackoverflow.com/a/6969486
+ *
+ * @internal
  */
-export function escapeRegExpChars(value) {
+export function escapeRegExpChars(value: string | null | undefined): string | null | undefined {
     if (!value) return value
 
     // eslint-disable-next-line
@@ -181,17 +230,26 @@ export function escapeRegExpChars(value) {
 /**
  * Remove accents/diacritics in a string in JavaScript
  * https://stackoverflow.com/a/37511463
+ *
+ * @internal
  */
-export function removeDiacriticsFromString(value) {
+export function removeDiacriticsFromString(value: string): string {
     if (!value) return value
 
     return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 }
 
-export function multiColumnSort(inputArray, sortingPriority) {
+export function multiColumnSort<T>(
+    inputArray: Record<string,
+    T>[],
+    sortingPriority: string[]
+): Record<string, T>[] {
     // clone it to prevent the any watchers from triggering every sorting iteration
-    const array = JSON.parse(JSON.stringify(inputArray))
-    const fieldSorter = (fields) => (a, b) => fields.map((o) => {
+    const array: Record<string, T>[] = JSON.parse(JSON.stringify(inputArray))
+    const fieldSorter = (fields: string[]) => (
+        a: Record<string, T>,
+        b: Record<string, T>
+    ) => fields.map((o) => {
         let dir = 1
         if (o[0] === '-') { dir = -1; o = o.substring(1) }
         const aValue = getValueByPath(a, o)
@@ -202,7 +260,7 @@ export function multiColumnSort(inputArray, sortingPriority) {
     return array.sort(fieldSorter(sortingPriority))
 }
 
-export function createNewEvent(eventName) {
+export function createNewEvent(eventName: string): Event {
     let event
     if (typeof Event === 'function') {
         event = new Event(eventName)
@@ -213,8 +271,8 @@ export function createNewEvent(eventName) {
     return event
 }
 
-export function toCssWidth(width) {
-    return width === undefined ? null : (isNaN(width) ? `${width}` : width + 'px')
+export function toCssWidth(width: number | string | undefined): string | null {
+    return width === undefined ? null : (isNaN(+width) ? `${width}` : width + 'px')
 }
 
 /**
@@ -222,8 +280,10 @@ export function toCssWidth(width) {
  * @param  {String} locale A bcp47 localerouter. undefined will use the user browser locale
  * @param  {String} format long (ex. March), short (ex. Mar) or narrow (M)
  * @return {Array<String>} An array of month names
+ *
+ * @internal
  */
-export function getMonthNames(locale = undefined, format = 'long') {
+export function getMonthNames(locale = undefined, format: Intl.DateTimeFormatOptions['month'] = 'long'): string[] {
     const dates = []
     for (let i = 0; i < 12; i++) {
         dates.push(new Date(2000, i, 15))
@@ -239,8 +299,10 @@ export function getMonthNames(locale = undefined, format = 'long') {
  * @param  {String} locale A bcp47 localerouter. undefined will use the user browser locale
  * @param  {String} format long (ex. Thursday), short (ex. Thu) or narrow (T)
  * @return {Array<String>} An array of weekday names
+ *
+ * @internal
  */
-export function getWeekdayNames(locale = undefined, format = 'narrow') {
+export function getWeekdayNames(locale = undefined, format: Intl.DateTimeFormatOptions['weekday'] = 'narrow'): string[] {
     const dates = []
     for (let i = 0; i < 7; i++) {
         const dt = new Date(2000, 0, i + 1)
@@ -257,36 +319,39 @@ export function getWeekdayNames(locale = undefined, format = 'narrow') {
  * @param  {String} includes injections of (?!={groupname}) for each group
  * @param  {String} the string to run regex
  * @return {Object} an object with a property for each group having the group's match as the value
+ * @throws {RangeError} if `pattern` does not contain any group.
+ *
+ * @internal
  */
-export function matchWithGroups(pattern, str) {
+export function matchWithGroups(pattern: string, str: string): Record<string, string | null> {
     const matches = str.match(pattern)
-    return pattern
-        // get the pattern as a string
-        .toString()
-        // suss out the groups
-        .match(/<(.+?)>/g)
+    const groupNames = pattern.toString().match(/<(.+?)>/g)
+    if (groupNames == null) {
+        throw new RangeError('pattern must contain at least one group')
+    }
+    return groupNames
         // remove the braces
         .map((group) => {
             const groupMatches = group.match(/<(.+)>/)
-            if (!groupMatches || groupMatches.length <= 0) {
-                return null
-            }
-            return group.match(/<(.+)>/)[1]
+            // @ts-expect-error - groupMatches should never be null
+            return groupMatches[1]
         })
         // create an object with a property for each group having the group's match as the value
-        .reduce((acc, curr, index, arr) => {
+        .reduce((acc, curr, index) => {
             if (matches && matches.length > index) {
                 acc[curr] = matches[index + 1]
             } else {
                 acc[curr] = null
             }
             return acc
-        }, {})
+        }, {} as Record<string, string | null>)
 }
 
 /**
  * Based on
  * https://github.com/fregante/supports-webp
+ *
+ * @internal
  */
 export function isWebpSupported() {
     return new Promise((resolve) => {
@@ -297,25 +362,29 @@ export function isWebpSupported() {
     }).catch(() => false)
 }
 
-export function isCustomElement(vm) {
-    return 'shadowRoot' in vm.$root.$options
+// only `$root` of a component instance is our concern.
+// we may face type errors if we use `ComponentPublicInstance` directly.
+export function isCustomElement(vm: Pick<ComponentPublicInstance, '$root'>) {
+    return vm.$root != null && 'shadowRoot' in vm.$root.$options
 }
 
-export const isDefined = (d) => d !== undefined
+export const isDefined = (d: unknown) => d !== undefined
 
 /**
  * Checks if a value is null or undefined.
  * Based on
  * https://github.com/lodash/lodash/blob/master/isNil.js
+ *
+ * @internal
  */
-export const isNil = (value) => value === null || value === undefined
+export const isNil = (value: unknown) => value === null || value === undefined
 
-export function isFragment(vnode) {
+export function isFragment(vnode: VNode): boolean {
     return vnode.type === Fragment
 }
 
 // TODO: replacement of vnode.tag test
-export function isTag(vnode) {
+export function isTag(vnode: VNode): boolean {
     return vnode.type !== Comment &&
         vnode.type !== Text &&
         vnode.type !== Static
@@ -328,7 +397,10 @@ export function isTag(vnode) {
 // we cannot access getExposeProxy since it is not exported from `vue`, though,
 // its purpose seems to be one-time initialization of component.exposeProxy,
 // which should have been done by this function call
-export function getComponentFromVNode(vnode) {
+export function getComponentFromVNode(
+    vnode: VNode
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): ComponentPublicInstance | Record<string, any> | null | undefined {
     if (!vnode) {
         return undefined
     }
@@ -354,7 +426,7 @@ export function getComponentFromVNode(vnode) {
 // This function also should take care of compatiblity with other plugins.
 // We need a generic solution, though, it fixes compatiblity issues of
 // individual plugins for now.
-export function copyAppContext(src, dest) {
+export function copyAppContext(src: App, dest: App) {
     // replacing _context won't work because methods of app bypasses app._context
     const { _context: srcContext } = src
     const { _context: destContext } = dest
@@ -363,8 +435,11 @@ export function copyAppContext(src, dest) {
     destContext.components = srcContext.components
     destContext.directives = srcContext.directives
     destContext.provides = srcContext.provides
+    // @ts-expect-error - optionsCache is internal field
     destContext.optionsCache = srcContext.optionsCache
+    // @ts-expect-error - propsCache is internal field
     destContext.propsCache = srcContext.propsCache
+    // @ts-expect-error - emitsCache is internal field
     destContext.emitsCache = srcContext.emitsCache
     // vue-i18n support: https://github.com/ntohq/buefy-next/issues/153
     if ('__VUE_I18N_SYMBOL__' in src) {

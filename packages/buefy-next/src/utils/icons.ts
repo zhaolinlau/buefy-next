@@ -47,7 +47,7 @@ const faIcons: () => InternalIconPack = () => {
 }
 
 const getIcons: () => Record<string, IconPack> = () => {
-    let icons = {
+    let icons: Record<string, IconPack> = {
         mdi: mdiIcons,
         fa: faIcons(),
         fas: faIcons(),
@@ -64,7 +64,7 @@ const getIcons: () => Record<string, IconPack> = () => {
     }
 
     if (config && config.customIconPacks) {
-        icons = merge(icons, config.customIconPacks, true)
+        icons = merge<Record<string, IconPack>>(icons, config.customIconPacks, true)
     }
 
     return icons
