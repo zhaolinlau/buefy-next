@@ -214,7 +214,7 @@ export function createNewEvent(eventName) {
 }
 
 export function toCssWidth(width) {
-    return width === undefined ? null : (isNaN(width) ? width : width + 'px')
+    return width === undefined ? null : (isNaN(width) ? `${width}` : width + 'px')
 }
 
 /**
