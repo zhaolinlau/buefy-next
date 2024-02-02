@@ -4,11 +4,8 @@ import './utils/vue-augmentation'
 import allComponents from './components'
 
 import { merge } from './utils/helpers'
-import config, {
-    setOptions,
-    setVueInstance,
-    type BuefyConfigOptions
-} from './utils/config'
+import config, { setOptions, setVueInstance } from './utils/config'
+import type { BuefyConfig, BuefyConfigOptions } from './utils/config'
 import { registerComponentProgrammatic } from './utils/plugins'
 
 import ConfigComponent from './utils/ConfigComponent'
@@ -17,7 +14,7 @@ const Buefy = {
     install(Vue: App, options: BuefyConfigOptions = {}) {
         setVueInstance(Vue)
         // Options
-        setOptions(merge(config, options, true))
+        setOptions(merge<BuefyConfig>(config, options, true))
         // Components
         allComponents.forEach((component) => Vue.use(component))
         // Config component
