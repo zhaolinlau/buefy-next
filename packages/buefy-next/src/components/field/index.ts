@@ -1,9 +1,10 @@
+import type { App } from 'vue'
 import Field from './Field.vue'
 
 import { use, registerComponent } from '../../utils/plugins'
 
 const Plugin = {
-    install(Vue) {
+    install(Vue: App) {
         registerComponent(Vue, Field)
     }
 }
