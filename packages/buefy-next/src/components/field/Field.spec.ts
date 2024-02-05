@@ -1,7 +1,10 @@
 import { shallowMount, mount } from '@vue/test-utils'
-import BField from '@components/field/Field'
-import BFieldBody from '@components/field/FieldBody'
-import BInput from '@components/input/Input'
+import type { ComponentMountingOptions } from '@vue/test-utils'
+import { describe, expect, it } from 'vitest'
+import BField from '@components/field/Field.vue'
+import type { FieldMessageProp } from '@components/field/Field.vue'
+import BFieldBody from '@components/field/FieldBody.vue'
+import BInput from '@components/input/Input.vue'
 
 const components = {
     'b-field': BField,
@@ -53,7 +56,10 @@ describe('BField', () => {
     })
 
     describe('Passing a message prop', () => {
-        const generateMountOptions = ({ message, slot }) => {
+        // `slot` may be a template string
+        const generateMountOptions = (
+            { message, slot }: { message: FieldMessageProp, slot?: string }
+        ) => {
             return {
                 props: { message },
                 slots: {
@@ -192,7 +198,7 @@ describe('BField', () => {
     })
 
     describe('Passing true for horizontal prop', () => {
-        const generateMountOptions = (props) => {
+        const generateMountOptions = (props?: ComponentMountingOptions<InstanceType<typeof BField>>['props']) => {
             return {
                 props: {
                     horizontal: true,
