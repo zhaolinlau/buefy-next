@@ -33,35 +33,37 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+    import { defineComponent } from 'vue'
+
     import api from './api/input'
     import variables from './variables/input'
 
-    import ExSimple from './examples/ExSimple'
+    import ExSimple from './examples/ExSimple.vue'
     import ExSimpleCode from './examples/ExSimple.vue?raw'
 
-    import ExHorizontal from './examples/ExHorizontal'
+    import ExHorizontal from './examples/ExHorizontal.vue'
     import ExHorizontalCode from './examples/ExHorizontal.vue?raw'
 
-    import ExTypesStates from './examples/ExTypesStates'
+    import ExTypesStates from './examples/ExTypesStates.vue'
     import ExTypesStatesCode from './examples/ExTypesStates.vue?raw'
 
-    import ExIcons from './examples/ExIcons'
+    import ExIcons from './examples/ExIcons.vue'
     import ExIconsCode from './examples/ExIcons.vue?raw'
 
-    import ExValidation from './examples/ExValidation'
+    import ExValidation from './examples/ExValidation.vue'
     import ExValidationCode from './examples/ExValidation.vue?raw'
 
-    import ExPassword from './examples/ExPassword'
+    import ExPassword from './examples/ExPassword.vue'
     import ExPasswordCode from './examples/ExPassword.vue?raw'
 
-    import ExSizes from './examples/ExSizes'
+    import ExSizes from './examples/ExSizes.vue'
     import ExSizesCode from './examples/ExSizes.vue?raw'
 
-    import ExLazy from './examples/ExLazy'
+    import ExLazy from './examples/ExLazy.vue'
     import ExLazyCode from './examples/ExLazy.vue?raw'
 
-    export default {
+    export default defineComponent({
         data() {
             return {
                 api,
@@ -84,5 +86,5 @@
                 ExLazyCode
             }
         }
-    }
+    })
 </script>
