@@ -1,8 +1,10 @@
 import { shallowMount, mount } from '@vue/test-utils'
-import BInput from '@components/input/Input'
-import BIcon from '@components/icon/Icon'
+import type { VueWrapper } from '@vue/test-utils'
+import { beforeEach, describe, expect, it } from 'vitest'
+import BInput from '@components/input/Input.vue'
+import BIcon from '@components/icon/Icon.vue'
 
-let wrapper
+let wrapper: VueWrapper<InstanceType<typeof BInput>>
 
 describe('BInput', () => {
     beforeEach(() => {
@@ -95,7 +97,7 @@ describe('BInput', () => {
             }
         })
 
-        await wrapper.setProps({ value: 'bar' })
+        await wrapper.setProps({ modelValue: 'bar' })
 
         expect(wrapper.find('input').exists()).toBeTruthy()
         expect(wrapper.vm.newType).toBe('password')
@@ -184,7 +186,7 @@ describe('BInput', () => {
         expect(input.vm.statusTypeIcon).toBe('alert')
     })
 
-    it('manage the click on icon', (done) => {
+    it('manage the click on icon', async () => {
         const wrapper = mount(BInput, {
             propsData: {
                 icon: 'magnify',
@@ -198,9 +200,7 @@ describe('BInput', () => {
         expect(visibilityIcon.exists()).toBeTruthy()
         visibilityIcon.trigger('click')
 
-        wrapper.vm.$nextTick(() => {
-            expect(wrapper.emitted()['icon-click']).toBeTruthy()
-            done()
-        })
+        await wrapper.vm.$nextTick()
+        expect(wrapper.emitted()['icon-click']).toBeTruthy()
     })
 })
