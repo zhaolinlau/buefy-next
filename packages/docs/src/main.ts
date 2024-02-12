@@ -36,6 +36,14 @@ window.global ||= window
 vueApp.config.globalProperties.$http = Axios
 vueApp.config.globalProperties.$eventHub = new TinyEmitter()
 
+// allows access to `$http` and `$eventHub` in all components
+declare module '@vue/runtime-core' {
+    interface ComponentCustomProperties {
+        $http: typeof Axios
+        $eventHub: TinyEmitter
+    }
+}
+
 vueApp.use(Buefy, {
     // defaultModalScroll: 'keep'
     // defaultIconPack: 'fa',
