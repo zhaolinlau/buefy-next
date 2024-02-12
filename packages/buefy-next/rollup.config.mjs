@@ -29,12 +29,23 @@ const components = fs
         fs.statSync(path.join(baseFolder + componentsFolder, f)).isDirectory()
     )
 
+const TS_COMPONENTS = [
+    'autocomplete',
+    'button',
+    'checkbox',
+    'field',
+    'icon',
+    'input',
+    'tag'
+]
+
 const entries = {
     index: './src/index.ts',
-    helpers: './src/utils/helpers.js',
+    helpers: './src/utils/helpers.ts',
     config: './src/utils/ConfigComponent.js',
     ...components.reduce((obj, name) => {
-        obj[name] = (baseFolder + componentsFolder + name)
+        const ext = TS_COMPONENTS.indexOf(name) !== -1 ? 'ts' : 'js'
+        obj[name] = (baseFolder + componentsFolder + name + `/index.${ext}`)
         return obj
     }, {})
 }
@@ -61,9 +72,10 @@ const esbuildConfig = {
 
 export default () => {
     const mapComponent = (name) => {
+        const ext = TS_COMPONENTS.indexOf(name) !== -1 ? 'ts' : 'js'
         return [
             {
-                input: baseFolder + componentsFolder + `${name}/index.js`,
+                input: baseFolder + componentsFolder + `${name}/index.${ext}`,
                 external: ['vue'],
                 output: {
                     format: 'umd',
