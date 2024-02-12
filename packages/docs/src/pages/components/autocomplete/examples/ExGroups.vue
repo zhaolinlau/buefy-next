@@ -15,9 +15,20 @@
     </section>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
+import { BAutocomplete, BField } from '@ntohq/buefy-next'
 
-export default {
+interface DataItem {
+    type: string
+    items: string[]
+}
+
+export default defineComponent({
+    components: {
+        BAutocomplete,
+        BField
+    },
     data() {
         return {
             data: [
@@ -36,7 +47,7 @@ export default {
     },
     computed: {
         filteredDataObj() {
-            const newData = []
+            const newData: DataItem[] = []
               this.data.forEach(element => {
                 const items = element.items.filter(item =>
                     item.toLowerCase().indexOf(this.name.toLowerCase()) >= 0)
@@ -47,5 +58,5 @@ export default {
             return newData
         }
     }
-}
+})
 </script>
