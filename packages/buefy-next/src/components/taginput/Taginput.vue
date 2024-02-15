@@ -4,7 +4,7 @@
             class="taginput-container"
             :class="[statusType, size, containerClasses]"
             :disabled="disabledOrUndefined"
-            @click="hasInput && focus($event)"
+            @click="hasInput && focus()"
         >
             <slot name="selected" :tags="tags">
                 <b-tag
@@ -21,7 +21,7 @@
                     :closable="closable"
                     :aria-close-label="ariaCloseLabel"
                     :title="ellipsis && getNormalizedTagText(tag)"
-                    @close="removeTag(index, $event)"
+                    @close="removeTag(index, $event as Event)"
                 >
                     <slot name="tag" :tag="tag">
                         {{ getNormalizedTagText(tag) }}
@@ -54,9 +54,9 @@
                 :append-to-body="appendToBody"
                 :confirm-keys="confirmKeys"
                 @typing="onTyping"
-                @focus="onFocus"
-                @blur="customOnBlur"
-                @keydown="keydown"
+                @focus="onFocus($event as Event)"
+                @blur="customOnBlur($event as Event)"
+                @keydown="keydown($event as KeyboardEvent)"
                 @compositionstart="isComposing = true"
                 @compositionend="isComposing = false"
                 @select="onSelect"
@@ -103,44 +103,51 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
+import type { PropType } from 'vue'
+
 import { getValueByPath } from '../../utils/helpers'
-import Tag from '../tag/Tag.vue'
-import Autocomplete from '../autocomplete/Autocomplete.vue'
+import BTag from '../tag/Tag.vue'
+import BAutocomplete from '../autocomplete/Autocomplete.vue'
 import config from '../../utils/config'
 import FormElementMixin from '../../utils/FormElementMixin'
 
-export default {
+type BAutocompleteInstance = InstanceType<typeof BAutocomplete>
+
+// Options API does not support generics.
+// But we use `T` to represent the type of a tag instead of `any` for marking
+// where tags are expected.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type T = any
+// `U` represents the type of the inputs to `createTag` and `beforeAdding`.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type U = any
+
+export default defineComponent({
     name: 'BTaginput',
     components: {
-        [Autocomplete.name]: Autocomplete,
-        [Tag.name]: Tag
+        BAutocomplete,
+        BTag
     },
     mixins: [FormElementMixin],
     inheritAttrs: false,
     props: {
         modelValue: {
-            type: Array,
+            type: Array as PropType<T[]>,
             default: () => []
         },
         data: {
-            type: Array,
+            type: Array as PropType<U[]>,
             default: () => []
         },
         type: String,
         closeType: String,
-        rounded: {
-            type: Boolean,
-            default: false
-        },
         attached: {
             type: Boolean,
             default: false
         },
-        maxtags: {
-            type: [Number, String],
-            required: false
-        },
+        maxtags: Number,
         hasCounter: {
             type: Boolean,
             default: () => config.defaultTaginputHasCounter
@@ -149,7 +156,6 @@ export default {
             type: String,
             default: 'value'
         },
-        autocomplete: Boolean,
         groupField: String,
         groupOptions: String,
         nativeAutocomplete: String,
@@ -167,20 +173,20 @@ export default {
         },
         ariaCloseLabel: String,
         confirmKeys: {
-            type: Array,
+            type: Array as PropType<string[]>,
             default: () => [',', 'Tab', 'Enter']
         },
         removeOnKeys: {
-            type: Array,
+            type: Array as PropType<string[]>,
             default: () => ['Backspace']
         },
         allowNew: Boolean,
         onPasteSeparators: {
-            type: Array,
+            type: Array as PropType<string[]>,
             default: () => [',']
         },
         beforeAdding: {
-            type: Function,
+            type: Function as PropType<(tag: U) => boolean>,
             default: () => true
         },
         allowDuplicates: {
@@ -192,18 +198,20 @@ export default {
             default: false
         },
         createTag: {
-            type: Function,
-            default: (tag) => tag
+            type: Function as PropType<(tag: U) => T>,
+            default: (tag: U) => tag
         },
         appendToBody: Boolean
     },
-    emits: [
-        'add',
-        'infinite-scroll',
-        'remove',
-        'typing',
-        'update:modelValue'
-    ],
+    emits: {
+        /* eslint-disable @typescript-eslint/no-unused-vars */
+        add: (tag: U) => true,
+        'infinite-scroll': () => true,
+        remove: (tag: T) => true,
+        typing: (value: number | string | undefined) => true,
+        'update:modelValue': (tags: T[]) => true
+        /* eslint-enable @typescript-eslint/no-unused-vars */
+    },
     data() {
         return {
             tags: Array.isArray(this.modelValue)
@@ -249,7 +257,7 @@ export default {
             return !!this.$slots.footer
         },
 
-        /**
+        /*
          * Show the input field if a maxtags hasn't been set or reached.
          */
         hasInput() {
@@ -260,7 +268,7 @@ export default {
             return this.tags.length
         },
 
-        /**
+        /*
          * If Taginput has onPasteSeparators prop,
          * returning new RegExp used to split pasted string.
          */
@@ -281,7 +289,7 @@ export default {
         }
     },
     watch: {
-        /**
+        /*
          * When v-model is changed set internal value.
          */
         modelValue(value) {
@@ -293,16 +301,17 @@ export default {
         }
     },
     methods: {
-        addTag(tag) {
-            const tagToAdd = tag || this.newTag.trim()
+        addTag(tag?: U) {
+            const tagToAdd: U = tag || this.newTag.trim()
 
             if (tagToAdd) {
-                if (!this.autocomplete) {
+                if (!(this.autocomplete || this.autocomplete === '')) {
                     const reg = this.separatorsAsRegExp
+                    // TODO: won't work if `tagToAdd` is not a string
                     if (reg && tagToAdd.match(reg)) {
                         tagToAdd.split(reg)
-                            .map((t) => t.trim())
-                            .filter((t) => t.length !== 0)
+                            .map((t: string) => t.trim())
+                            .filter((t: string) => t.length !== 0)
                             .map(this.addTag)
                         return
                     }
@@ -327,7 +336,7 @@ export default {
             }
         },
 
-        getNormalizedTagText(tag) {
+        getNormalizedTagText(tag: T): string {
             if (typeof tag === 'object') {
                 tag = getValueByPath(tag, this.field)
             }
@@ -335,14 +344,14 @@ export default {
             return `${tag}`
         },
 
-        customOnBlur(event) {
+        customOnBlur(event: Event) {
             // Add tag on-blur if not select only
-            if (!this.autocomplete) this.addTag()
+            if (!(this.autocomplete || this.autocomplete === '')) this.addTag()
 
             this.onBlur(event)
         },
 
-        onSelect(option) {
+        onSelect(option: U) {
             if (!option) return
 
             this.addTag(option)
@@ -351,13 +360,13 @@ export default {
             })
         },
 
-        removeTag(index, event) {
+        removeTag(index: number, event?: Event) {
             const tag = this.tags.splice(index, 1)[0]
             this.$emit('update:modelValue', this.tags)
             this.$emit('remove', tag)
             if (event) event.stopPropagation()
             if (this.openOnFocus && this.$refs.autocomplete) {
-                this.$refs.autocomplete.focus()
+                (this.$refs.autocomplete as BAutocompleteInstance).focus()
             }
             return tag
         },
@@ -368,13 +377,13 @@ export default {
             }
         },
 
-        keydown(event) {
+        keydown(event: KeyboardEvent) {
             const { key } = event // cannot destructure preventDefault (https://stackoverflow.com/a/49616808/2774496)
             if (this.removeOnKeys.indexOf(key) !== -1 && !this.newTag.length) {
                 this.removeLastTag()
             }
             // Stop if is to accept select only
-            if (this.autocomplete && !this.allowNew) return
+            if ((this.autocomplete || this.autocomplete === '') && !this.allowNew) return
 
             if (this.confirmKeys.indexOf(key) >= 0) {
                 // Allow Tab to advance to next field regardless
@@ -384,13 +393,13 @@ export default {
             }
         },
 
-        onTyping(event) {
-            this.$emit('typing', event.trim())
+        onTyping(event: number | string | undefined) {
+            this.$emit('typing', typeof event === 'number' ? event : event?.trim())
         },
 
         emitInfiniteScroll() {
             this.$emit('infinite-scroll')
         }
     }
-}
+})
 </script>
