@@ -36,7 +36,8 @@ const TS_COMPONENTS = [
     'field',
     'icon',
     'input',
-    'tag'
+    'tag',
+    'taginput'
 ]
 
 const entries = {
