@@ -36,6 +36,7 @@ const TS_COMPONENTS = [
     'field',
     'icon',
     'input',
+    'modal',
     'tag',
     'taginput'
 ]
