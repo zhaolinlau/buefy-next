@@ -30,25 +30,27 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+    import { defineComponent } from 'vue'
+
     import { preformat as _preformat } from '@/utils'
 
     import api from './api/modal'
     import variables from './variables/modal'
 
-    import ExSimple from './examples/ExSimple'
+    import ExSimple from './examples/ExSimple.vue'
     import ExSimpleCode from './examples/ExSimple.vue?raw'
 
-    import ExComponent from './examples/ExComponent'
+    import ExComponent from './examples/ExComponent.vue'
     import ExComponentCode from './examples/ExComponent.vue?raw'
 
-    import ExProgrammatic from './examples/ExProgrammatic'
+    import ExProgrammatic from './examples/ExProgrammatic.vue'
     import ExProgrammaticCode from './examples/ExProgrammatic.vue?raw'
 
-    import ExFullScreen from './examples/ExFullScreen'
+    import ExFullScreen from './examples/ExFullScreen.vue'
     import ExFullScreenCode from './examples/ExFullScreen.vue?raw'
 
-    export default {
+    export default defineComponent({
         data() {
             return {
                 api,
@@ -71,9 +73,9 @@
             }
         },
         methods: {
-            preformat(text) {
+            preformat(text: string) {
                 return _preformat(text)
             }
         }
-    }
+    })
 </script>
