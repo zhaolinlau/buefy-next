@@ -9,6 +9,17 @@ declare module '@vue/runtime-core' {
     }
 }
 
+// Type utility that extracts props type from a component constructor.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ExtractComponentProps<T> = T extends { new (...args: any[]): infer U }
+    // I thought `U extends ComponentPublicInstance<infer P>` would work,
+    // but it didn't
+    ? U extends { $props: infer P }
+        // makes fields of `$props` mutable and optional
+        ? { -readonly [Key in keyof P]?: P[Key] }
+        : Record<string, never>
+    : Record<string, never>
+
 /**
  * +/- function to native math sign
  *
