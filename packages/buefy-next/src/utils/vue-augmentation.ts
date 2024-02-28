@@ -5,6 +5,7 @@
 
 import 'vue'
 
+import type { DialogProgrammatic } from '../components/dialog'
 import type { ModalProgrammatic } from '../components/modal'
 
 // Augments the global property with `$buefy`.
@@ -15,6 +16,7 @@ declare module '@vue/runtime-core' {
         /** Global Buefy API. */
         $buefy: {
             globalNoticeInterval?: number | null,
+            dialog: DialogProgrammatic,
             modal: ModalProgrammatic,
             // TODO: make key-values more specific
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
