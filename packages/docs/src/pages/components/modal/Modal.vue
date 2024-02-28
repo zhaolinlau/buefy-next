@@ -37,6 +37,7 @@
 
     import api from './api/modal'
     import variables from './variables/modal'
+    import programmaticSyntax from './programmatic-syntax.js?raw'
 
     import ExSimple from './examples/ExSimple.vue'
     import ExSimpleCode from './examples/ExSimple.vue?raw'
@@ -63,13 +64,7 @@
                 ExComponentCode,
                 ExProgrammaticCode,
                 ExFullScreenCode,
-                programmaticSyntax: `
-                // From inside Vue instance
-                this.$buefy.modal.open(props)
-
-                // From outside Vue instance
-                import { ModalProgrammatic as Modal } from 'buefy'
-                Modal.open(props)`
+                programmaticSyntax
             }
         },
         methods: {
