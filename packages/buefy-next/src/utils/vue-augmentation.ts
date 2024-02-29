@@ -17,7 +17,7 @@ declare module '@vue/runtime-core' {
     interface ComponentCustomProperties {
         /** Global Buefy API. */
         $buefy: {
-            globalNoticeInterval?: number | null,
+            globalNoticeInterval?: ReturnType<typeof setTimeout>,
             dialog: DialogProgrammatic,
             modal: ModalProgrammatic,
             // TODO: make key-values more specific
