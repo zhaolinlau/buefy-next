@@ -20,21 +20,26 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+    import { defineComponent } from 'vue'
+
     import { preformat } from '@/utils'
     import api from './api/dialog'
     import { shallowFields } from '@/utils'
 
-    import ExAlertDialog from './examples/ExAlertDialog'
+    import ExAlertDialog from './examples/ExAlertDialog.vue'
     import ExAlertDialogCode from './examples/ExAlertDialog.vue?raw'
 
-    import ExConfirmDialog from './examples/ExConfirmDialog'
+    import ExConfirmDialog from './examples/ExConfirmDialog.vue'
     import ExConfirmDialogCode from './examples/ExConfirmDialog.vue?raw'
 
-    import ExPromptDialog from './examples/ExPromptDialog'
+    import ExPromptDialog from './examples/ExPromptDialog.vue'
     import ExPromptDialogCode from './examples/ExPromptDialog.vue?raw'
 
-    export default {
+    import outsideVueInstance from './outside-vue-instance.js?raw'
+    import promise from './promise.js?raw'
+
+    export default defineComponent({
         data() {
             return {
                 api,
@@ -46,18 +51,12 @@
                 ExAlertDialogCode,
                 ExConfirmDialogCode,
                 ExPromptDialogCode,
-                outsideVueInstance: `
-                import { DialogProgrammatic as Dialog } from 'buefy'
-                Dialog.alert('We can use confirm and prompt methods as well')`,
-                promise: `
-                const { result, dialog } = await this.$buefy.dialog.confirm({
-                    message: 'Are you sure?',
-                    closeOnConfirm: false
-                });`
+                outsideVueInstance,
+                promise,
             }
         },
         methods: {
             preformat
         }
-    }
+    })
 </script>
