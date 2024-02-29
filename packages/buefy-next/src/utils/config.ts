@@ -59,7 +59,8 @@ export interface IconPack {
 export interface BuefyConfig {
     /**
      * Default container element.
-     * Default value of `container` prop of `Dialog`.
+     * Default value of `container` prop of `Dialog`, `Notification`,
+     * `Snackbar`, and `Toast`.
      */
     defaultContainerElement?: string | null,
     /**
