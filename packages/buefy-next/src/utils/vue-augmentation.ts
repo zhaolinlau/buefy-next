@@ -3,6 +3,8 @@
 // module augmentation in the rolled up output.
 // https://github.com/microsoft/rushstack/issues/1709
 
+// KEEP a SINGLE IMPORT statement in a SINGLE LINE,
+// otherwise the post processing will be messed up.
 import 'vue'
 
 import type { DialogProgrammatic } from '../components/dialog'
