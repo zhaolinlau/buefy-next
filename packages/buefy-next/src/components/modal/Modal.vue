@@ -77,7 +77,7 @@ const Modal = defineComponent({
         modelValue: Boolean,
         component: [Object, Function, String],
         content: {
-            type: [String, Object, Array] as PropType<string | string[] | VNode | VNode[] >
+            type: [String, Object, Array] as PropType<string | VNode | (string | VNode)[] >
         },
         programmatic: Boolean,
         props: Object,
