@@ -39,7 +39,8 @@ const TS_COMPONENTS = [
     'input',
     'modal',
     'tag',
-    'taginput'
+    'taginput',
+    'toast'
 ]
 
 const entries = {
