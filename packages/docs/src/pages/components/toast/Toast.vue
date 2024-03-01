@@ -17,28 +17,30 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+    import { defineComponent } from 'vue'
+
     import { preformat } from '@/utils'
     import api from './api/toast'
     import variables from './variables/toast'
 
-    import ExSimple from './examples/ExSimple'
+    import ExSimple from './examples/ExSimple.vue'
     import ExSimpleCode from './examples/ExSimple.vue?raw'
 
-    export default {
+    import outsideVueInstance from './outside-vue-instance.js?raw'
+
+    export default defineComponent({
         data() {
             return {
                 api,
                 variables,
                 ExSimple,
                 ExSimpleCode,
-                outsideVueInstance: `
-                import { ToastProgrammatic as Toast } from 'buefy'
-                Toast.open('Toasty!')`
+                outsideVueInstance,
             }
         },
         methods: {
             preformat
         }
-    }
+    })
 </script>
