@@ -9,6 +9,7 @@ import 'vue'
 
 import type { DialogProgrammatic } from '../components/dialog'
 import type { ModalProgrammatic } from '../components/modal'
+import type { ToastProgrammatic } from '../components/toast'
 
 // Augments the global property with `$buefy`.
 // https://vuejs.org/guide/typescript/options-api.html#augmenting-global-properties
@@ -20,6 +21,7 @@ declare module '@vue/runtime-core' {
             globalNoticeInterval?: ReturnType<typeof setTimeout>,
             dialog: DialogProgrammatic,
             modal: ModalProgrammatic,
+            toast: ToastProgrammatic,
             // TODO: make key-values more specific
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             [key: string]: any
