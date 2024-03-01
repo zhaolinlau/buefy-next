@@ -23,6 +23,27 @@ export type VueClassAttribute =
 export type ModalCancellableOption = 'escape' | 'x' | 'outside' | 'button'
 
 /**
+ * Possible positions of notice components.
+ *
+ * @public
+ */
+export const NOTICE_POSITIONS = [
+    'is-top-right',
+    'is-top',
+    'is-top-left',
+    'is-bottom-right',
+    'is-bottom',
+    'is-bottom-left'
+] as const
+
+/**
+ * Position of notice components.
+ *
+ * @public
+ */
+export type NoticePosition = typeof NOTICE_POSITIONS[number]
+
+/**
  * Scroll behavior for `Modal` and `Sidebar`.
  *
  * @public
@@ -108,7 +129,7 @@ export interface BuefyConfig {
      * Default position of `Snackbar`.
      * "is-bottom-right" by default.
      */
-    defaultSnackbarPosition?: string | null,
+    defaultSnackbarPosition?: NoticePosition | null,
     /**
      * Default duration of `Toast` in milliseconds.
      * 2000 by default.
@@ -118,7 +139,7 @@ export interface BuefyConfig {
      * Default position of `Toast`.
      * "is-top" by default.
      */
-    defaultToastPosition?: string | null,
+    defaultToastPosition?: NoticePosition | null,
     /**
      * Default duration of `Notification` in milliseconds.
      * 2000 by default.
@@ -128,7 +149,7 @@ export interface BuefyConfig {
      * Default position of `Notification`.
      * "is-top-right" by default.
      */
-    defaultNotificationPosition?: string | null,
+    defaultNotificationPosition?: NoticePosition | null,
     /**
      * Default type of `Tooltip`.
      * "is-primary" by default.
