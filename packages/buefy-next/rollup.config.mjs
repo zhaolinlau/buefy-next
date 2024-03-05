@@ -38,6 +38,7 @@ const TS_COMPONENTS = [
     'icon',
     'input',
     'modal',
+    'notification',
     'tag',
     'taginput',
     'toast'
