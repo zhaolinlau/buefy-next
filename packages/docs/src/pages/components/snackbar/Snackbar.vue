@@ -17,27 +17,29 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
+    import { defineComponent } from 'vue'
+
     import { preformat } from '@/utils'
 
     import api from './api/snackbar'
     import variables from './variables/snackbar'
 
-    import ExSimple from './examples/ExSimple'
+    import ExSimple from './examples/ExSimple.vue'
     import ExSimpleCode from './examples/ExSimple.vue?raw'
 
-    export default {
+    import outsideVueInstance from './outside-vue-instance.js?raw'
+
+    export default defineComponent({
         data() {
             return {
                 api,
                 variables,
                 ExSimple,
                 ExSimpleCode,
-                outsideVueInstance: `
-                import { SnackbarProgrammatic as Snackbar } from 'buefy'
-                Snackbar.open('Look at me!')`
+                outsideVueInstance,
             }
         },
         methods: { preformat }
-    }
+    })
 </script>
