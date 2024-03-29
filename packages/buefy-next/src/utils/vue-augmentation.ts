@@ -10,6 +10,7 @@ import 'vue'
 import type { DialogProgrammatic } from '../components/dialog'
 import type { ModalProgrammatic } from '../components/modal'
 import type { NotificationProgrammatic } from '../components/notification'
+import type { SnackbarProgrammatic } from '../components/snackbar'
 import type { ToastProgrammatic } from '../components/toast'
 
 // Augments the global property with `$buefy`.
@@ -23,6 +24,7 @@ declare module '@vue/runtime-core' {
             dialog: DialogProgrammatic,
             modal: ModalProgrammatic,
             notification: NotificationProgrammatic,
+            snackbar: SnackbarProgrammatic,
             toast: ToastProgrammatic,
             // TODO: make key-values more specific
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
