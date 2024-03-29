@@ -39,6 +39,7 @@ const TS_COMPONENTS = [
     'input',
     'modal',
     'notification',
+    'snackbar',
     'tag',
     'taginput',
     'toast'
