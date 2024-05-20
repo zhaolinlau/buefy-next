@@ -370,8 +370,8 @@ export function matchWithGroups(pattern: string, str: string): Record<string, st
  *
  * @internal
  */
-export function isWebpSupported() {
-    return new Promise((resolve) => {
+export function isWebpSupported(): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
         const image = new Image()
         image.onerror = () => resolve(false)
         image.onload = () => resolve(image.width === 1)
