@@ -41,6 +41,7 @@ const TS_COMPONENTS = [
     'modal',
     'notification',
     'snackbar',
+    'switch',
     'tag',
     'taginput',
     'toast'
