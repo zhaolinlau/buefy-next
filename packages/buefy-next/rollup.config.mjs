@@ -36,6 +36,7 @@ const TS_COMPONENTS = [
     'dialog',
     'field',
     'icon',
+    'image',
     'input',
     'modal',
     'notification',
