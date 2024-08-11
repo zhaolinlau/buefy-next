@@ -20,6 +20,17 @@ export type ExtractComponentProps<T> = T extends { new (...args: any[]): infer U
         : Record<string, never>
     : Record<string, never>
 
+// Type utility that extracts data type from a component constructor.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ExtractComponentData<T> = T extends { new (...args: any[]): infer U }
+    // I thought `U extends ComponentPublicInstance<infer D>` would work,
+    // but it didn't
+    ? U extends { $data: infer D }
+        // makes fields of `$data` optional
+        ? { [Key in keyof D]?: D[Key] }
+        : Record<string, never>
+    : Record<string, never>
+
 /**
  * +/- function to native math sign
  *
