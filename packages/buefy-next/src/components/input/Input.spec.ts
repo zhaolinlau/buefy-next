@@ -6,9 +6,12 @@ import type { MockInstance } from 'vitest'
 import BInput from '@components/input/Input.vue'
 import BIcon from '@components/icon/Icon.vue'
 import FormElementMixin from '@utils/FormElementMixin'
+import type { ExtractComponentData } from '@utils/helpers'
 
 type BInputInstance = InstanceType<typeof BInput>
 type FormElementMixinInstance = InstanceType<typeof FormElementMixin>
+
+type BInputData = ExtractComponentData<typeof BInput>
 
 let wrapper: VueWrapper<BInputInstance>
 
@@ -228,8 +231,7 @@ describe('BInput', () => {
 
         it('should validate value when updated by user interaction', async () => {
             const wrapper = shallowMount(BInput, {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                data: () => ({ isValid: false } as any)
+                data: () => ({ isValid: false } as BInputData)
             })
 
             // simulates "input" event
@@ -248,8 +250,7 @@ describe('BInput', () => {
 
         it('should validate value when programmatically updated', async () => {
             const wrapper = shallowMount(BInput, {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                data: () => ({ isValid: false } as any)
+                data: () => ({ isValid: false } as BInputData)
             })
             await wrapper.setProps({ modelValue: 'foo' })
             await wrapper.vm.$nextTick()
