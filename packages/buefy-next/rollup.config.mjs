@@ -44,7 +44,8 @@ const TS_COMPONENTS = [
     'switch',
     'tag',
     'taginput',
-    'toast'
+    'toast',
+    'upload'
 ]
 
 const entries = {
